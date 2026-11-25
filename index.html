@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Black Friday VPN deals 2026: total cost over 24, 27 or 36 months</title>
+<meta name="description" content="Black Friday 2026 VPN deals ranked by the money you actually pay over 24, 27 or 36 months, from prices read on the providers' order pages in November 2026. Unknown renewals are flagged, never guessed.">
+<link rel="canonical" href="https://ricco020.github.io/vpn-black-friday-total-cost/">
+<style>
+:root{--ink:#10141a;--paper:#f2efe8;--accent:#b4232c;--line:#cfc7b8;--soft:#e7e0d2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.55 Georgia,"Iowan Old Style",serif}
+main{max-width:820px;margin:0 auto;padding:40px 20px 60px}
+h1{font:700 2rem/1.15 "Courier New",monospace;letter-spacing:-.5px;margin:0 0 12px}
+h1 span{color:var(--accent)}
+p.lead{margin:0 0 24px;font-size:1.05rem}
+.ctl{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 16px}
+.ctl button{font:700 .95rem "Courier New",monospace;padding:8px 14px;border:2px solid var(--ink);background:#fff;cursor:pointer}
+.ctl button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+table{width:100%;border-collapse:collapse;margin:8px 0 6px;font-family:"Courier New",monospace;font-size:.92rem}
+th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:right;vertical-align:top}
+th:first-child,td:first-child{text-align:left}
+thead th{background:var(--ink);color:var(--paper)}
+tr:first-child td{background:var(--soft)}
+.unk{color:var(--accent);font-weight:700}
+.small{font-size:.85rem;color:#4a5560}
+footer{margin-top:40px;border-top:2px solid var(--ink);padding-top:14px;font-size:.9rem}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<main>
+<h1>Black Friday VPN deals 2026: the <span>total</span>, not the monthly price</h1>
+<p class="lead">Every Black Friday VPN plan is advertised per month, but each one covers a different number of months, is billed upfront and in a different currency. This table puts the plans side by side by what leaves your account over the period you choose. When a provider does not print its renewal price, the tool says so instead of inventing one.</p>
+
+<div class="ctl" role="group" aria-label="Period">
+<button data-m="24" aria-pressed="false">24 months</button>
+<button data-m="27" aria-pressed="true">27 months</button>
+<button data-m="36" aria-pressed="false">36 months</button>
+</div>
+
+<table aria-live="polite">
+<thead><tr><th>Plan</th><th>Upfront (first term)</th><th>Total over period</th><th>Per month over period</th><th>Read on</th></tr></thead>
+<tbody id="out"></tbody>
+</table>
+<p class="small">Euro and dollar totals are not converted into each other: the currency is the one shown on the provider's page when it was read. VAT may be added at checkout depending on your country.</p>
+
+<h2>How the total is counted</h2>
+<p>The first term is billed once, on day one. If the period you pick is longer than the first term, the plan renews for 12 months at its renewal price, billed upfront again. A plan whose renewal price was not printed on the order page shows "renewal not published" for any period past its first term, because the real figure is unknown. Turning auto-renewal off before the first term ends avoids the renewal charge.</p>
+
+<footer>
+<p>Prices come from the table in <a href="https://www.vpnsmith.com/en/blog/black-friday-vpn-deals-2026">VPNSmith's Black Friday and Cyber Monday VPN deals guide</a>, read on each provider's own order page on the date shown in the last column (NordVPN on 14 November 2026, the others on 16 November 2026). Black Friday prices change during the sale and by country, so check the order page before you buy.</p>
+<p class="small">Source code: <a href="https://github.com/ricco020/vpn-black-friday-total-cost">github.com/ricco020/vpn-black-friday-total-cost</a>. MIT licence. Runs in your browser, nothing is sent anywhere.</p>
+</footer>
+</main>
+<script>
+const PLANS=[
+ {n:"Proton VPN Plus (2 years)",c:"$",up:59.76,m:24,r:83.88,d:"16 Nov 2026"},
+ {n:"Proton Unlimited (1 year)",c:"$",up:77.88,m:12,r:119.88,d:"16 Nov 2026"},
+ {n:"Surfshark Starter (24 + 3 months)",c:"€",up:67.23,m:27,r:null,d:"16 Nov 2026"},
+ {n:"Surfshark One (24 + 3 months)",c:"€",up:67.23,m:27,r:null,d:"16 Nov 2026"},
+ {n:"Surfshark One+ (24 + 3 months)",c:"€",up:107.73,m:27,r:null,d:"16 Nov 2026"},
+ {n:"NordVPN Basic (2 years + 3 months)",c:"€",up:80.73,m:27,r:null,d:"14 Nov 2026"}
+];
+function total(p,m){let t=p.up,cov=p.m;while(cov<m){if(p.r===null)return null;t+=p.r;cov+=12;}return t;}
+function f(c,x){return c+x.toFixed(2);}
+function run(m){
+ const rows=PLANS.map(p=>({p,t:total(p,m)})).sort((a,b)=>(a.t===null)-(b.t===null)||(a.t??0)-(b.t??0));
+ document.getElementById('out').innerHTML=rows.map(({p,t})=>`<tr><td>${p.n}</td><td>${f(p.c,p.up)} for ${p.m} months</td>`+
+  (t===null?`<td class="unk" colspan="2">renewal not published</td>`:`<td>${f(p.c,t)}</td><td>${f(p.c,t/m)}</td>`)+`<td>${p.d}</td></tr>`).join('');
+}
+document.querySelectorAll('.ctl button').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('.ctl button').forEach(x=>x.setAttribute('aria-pressed',x===b));run(+b.dataset.m);}));
+run(27);
+</script>
+</body>
+</html>
